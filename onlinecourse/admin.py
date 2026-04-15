@@ -1,12 +1,6 @@
 from django.contrib import admin
-from .models import (
-    Course,
-    Lesson,
-    Question,
-    Choice,
-    Submission,
-    SelectedChoice
-)
+from django.contrib.auth.models import User
+from .models import Course, Lesson, Question, Choice, Submission, SelectedChoice
 
 
 class ChoiceInline(admin.TabularInline):
@@ -45,7 +39,6 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ('created_at', 'updated_at')
     search_fields = ('name', 'description')
     inlines = [LessonInline]
-    prepopulated_fields = {}
 
 
 @admin.register(Lesson)
@@ -92,3 +85,12 @@ class SelectedChoiceAdmin(admin.ModelAdmin):
     list_display = ('submission', 'question', 'choice', 'selected_at')
     list_filter = ('selected_at',)
     readonly_fields = ('selected_at',)
+
+
+# Register all models with admin site
+admin.site.register(Course, CourseAdmin)
+admin.site.register(Lesson, LessonAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Choice, ChoiceAdmin)
+admin.site.register(Submission, SubmissionAdmin)
+admin.site.register(SelectedChoice, SelectedChoiceAdmin)

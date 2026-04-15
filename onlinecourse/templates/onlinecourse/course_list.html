@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses - Online Course Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .course-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            height: 100%;
+        }
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .course-card img {
+            height: 180px;
+            object-fit: cover;
+        }
+    </style>
+</body>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1 class="display-4">Explore Our Courses</h1>
+            <p class="lead">Choose from a variety of courses and start learning today!</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        {% if courses %}
+            <div class="row">
+                {% for course in courses %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card course-card">
+                        <img src="https://via.placeholder.com/400x200/667eea/ffffff?text={{ course.name }}"
+                             class="card-img-top" alt="{{ course.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.name }}</h5>
+                            <p class="card-text text-muted">
+                                {{ course.description|truncatewords:15|default:"Explore this comprehensive course and enhance your skills." }}
+                            </p>
+                            <a href="{% url 'onlinecourse:course_detail' course.id %}"
+                               class="btn btn-primary">View Course</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h4>No courses available</h4>
+                <p>Please check back later for new courses.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

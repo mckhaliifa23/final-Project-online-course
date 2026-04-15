@@ -11,6 +11,7 @@ urlpatterns = [
     # Exam submission URLs
     path('course/<int:course_id>/submit/', views.submit, name='submit'),
     path('course/<int:course_id>/result/<int:submission_id>/', views.show_exam_result, name='show_exam_result'),
+    path('course/<int:course_id>/review/<int:submission_id>/', views.exam_review, name='exam_review'),
 
     # User submission history
     path('my-submissions/', views.my_submissions, name='my_submissions'),

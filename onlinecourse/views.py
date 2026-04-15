@@ -140,9 +140,62 @@ def show_exam_result(request, course_id, submission_id):
     return render(request, 'onlinecourse/exam_result.html', context)
 
 
+def exam_review(request, course_id, submission_id):
+    """
+    View to display detailed exam results with all questions and correct answers.
+    This shows the exam results section required by Task 7.
+    """
+    course = get_object_or_404(Course, pk=course_id)
+    submission = get_object_or_404(Submission, pk=submission_id, course=course)
+
+    # Get all questions for this course
+    questions = Question.objects.filter(course=course)
+
+    # Build detailed results for each question
+    question_results = []
+    for question in questions:
+        # Get the user's selected choice for this question
+        selected_choice = None
+        try:
+            selected_choice_obj = SelectedChoice.objects.get(
+                submission=submission,
+                question=question
+            )
+            selected_choice = selected_choice_obj.choice
+        except SelectedChoice.DoesNotExist:
+            pass
+
+        # Get the correct answer for this question
+        correct_choice = Choice.objects.filter(question=question, is_correct=True).first()
+
+        question_results.append({
+            'question': question,
+            'selected_choice': selected_choice,
+            'correct_choice': correct_choice,
+            'is_correct': selected_choice == correct_choice if selected_choice else False
+        })
+
+    # Calculate statistics
+    total_questions = questions.count()
+    correct_answers = sum(1 for qr in question_results if qr['is_correct'])
+    percentage = (correct_answers / total_questions * 100) if total_questions > 0 else 0
+
+    context = {
+        'course': course,
+        'submission': submission,
+        'question_results': question_results,
+        'total_questions': total_questions,
+        'correct_answers': correct_answers,
+        'percentage': percentage,
+        'is_pass': submission.is_pass,
+    }
+
+    return render(request, 'onlinecourse/exam_review.html', context)
+
+
 def my_submissions(request):
     """View to display user's submission history"""
-    submissions = Submission.objects.filter(student=request.user).select_related(
+    submissions = Submission.objects.all().select_related(
         'course', 'lesson'
     ).order_by('-submitted_at')
 

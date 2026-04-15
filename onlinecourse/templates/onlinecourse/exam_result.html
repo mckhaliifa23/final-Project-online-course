@@ -122,9 +122,13 @@
             </div>
 
             <div class="d-grid gap-2">
-                <a href="{% url 'onlinecourse:course_detail' course.id %}"
+                <a href="{% url 'onlinecourse:exam_review' course.id submission.id %}"
                    class="btn btn-outline-primary">
-                    <i class="bi bi-arrow-clockwise"></i> Review Exam
+                    <i class="bi bi-list-check"></i> Review Detailed Results
+                </a>
+                <a href="{% url 'onlinecourse:course_detail' course.id %}"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Retake Exam
                 </a>
                 <a href="{% url 'onlinecourse:course_list' %}"
                    class="btn btn-primary">

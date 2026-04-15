@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db.models import Sum
 from .models import (
     Course,
@@ -41,7 +42,20 @@ def submit(request, course_id):
 
     course = get_object_or_404(Course, pk=course_id)
     questions = Question.objects.filter(course=course)
-    student = request.user
+
+    # Get student - if not authenticated, use or create a guest user
+    if request.user.is_authenticated:
+        student = request.user
+    else:
+        # Get or create a guest user for anonymous submissions
+        student, created = User.objects.get_or_create(
+            username='guest',
+            defaults={
+                'email': 'guest@example.com',
+                'first_name': 'Guest',
+                'last_name': 'User'
+            }
+        )
 
     # Get the first lesson (or create logic to get specific lesson)
     lesson = course.lessons.first()

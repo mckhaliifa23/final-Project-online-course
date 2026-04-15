@@ -39,7 +39,7 @@ def submit(request, course_id):
     Processes POST data from exam form and calculates score
     """
     if request.method != 'POST':
-        return redirect('course_detail', course_id=course_id)
+        return redirect('onlinecourse:course_detail', course_id=course_id)
 
     course = get_object_or_404(Course, pk=course_id)
     questions = Question.objects.filter(course=course)
@@ -49,7 +49,7 @@ def submit(request, course_id):
     lesson = course.lessons.first()
     if not lesson:
         messages.error(request, 'No lessons found for this course.')
-        return redirect('course_detail', course_id=course_id)
+        return redirect('onlinecourse:course_detail', course_id=course_id)
 
     # Calculate total score
     total_score = questions.aggregate(total=Sum('grade_point'))['total'] or 0
@@ -92,7 +92,7 @@ def submit(request, course_id):
             choice=choice
         )
 
-    return redirect('show_exam_result', course_id=course_id, submission_id=submission.id)
+    return redirect('onlinecourse:show_exam_result', course_id=course_id, submission_id=submission.id)
 
 
 @login_required

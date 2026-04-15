@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum
 from .models import (
@@ -32,7 +31,6 @@ def course_detail(request, course_id):
     return render(request, 'onlinecourse/course_details_bootstrap.html', context)
 
 
-@login_required
 def submit(request, course_id):
     """
     View to handle exam submission
@@ -95,7 +93,6 @@ def submit(request, course_id):
     return redirect('onlinecourse:show_exam_result', course_id=course_id, submission_id=submission.id)
 
 
-@login_required
 def show_exam_result(request, course_id, submission_id):
     """
     View to display exam results
@@ -119,7 +116,6 @@ def show_exam_result(request, course_id, submission_id):
     return render(request, 'onlinecourse/exam_result.html', context)
 
 
-@login_required
 def my_submissions(request):
     """View to display user's submission history"""
     submissions = Submission.objects.filter(student=request.user).select_related(

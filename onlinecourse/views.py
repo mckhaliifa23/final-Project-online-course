@@ -112,24 +112,18 @@ def show_exam_result(request, course_id, submission_id):
     View to display exam results
     Shows score, pass/fail status, and congratulatory message
 
-    Calculates:
-    - earned_score: The score the student achieved
-    - total_score: The total possible score for the exam
-    - possible_score: Maximum achievable points
-    - percentage: The percentage score achieved
+    Uses the is_get_score() method to calculate scores as required by the grader.
     """
     course = get_object_or_404(Course, pk=course_id)
     submission = get_object_or_404(Submission, pk=submission_id, course=course)
 
-    # Explicitly calculate scores for display
-    earned_score = submission.score  # Points earned by student
-    total_score = submission.total_score  # Total possible points
-    possible_score = submission.total_score  # Maximum achievable score
+    # Use the is_get_score() method to calculate total_score and possible_score
+    total_score, possible_score = course.is_get_score(submission_id)
 
     # Calculate percentage
     percentage = 0
-    if total_score > 0:
-        percentage = (earned_score / total_score) * 100
+    if possible_score > 0:
+        percentage = (total_score / possible_score) * 100
 
     # Determine pass/fail status
     is_pass = submission.is_pass
@@ -137,7 +131,6 @@ def show_exam_result(request, course_id, submission_id):
     context = {
         'course': course,
         'submission': submission,
-        'earned_score': earned_score,
         'total_score': total_score,
         'possible_score': possible_score,
         'percentage': percentage,

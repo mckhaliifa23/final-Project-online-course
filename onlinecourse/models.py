@@ -164,3 +164,45 @@ class SelectedChoice(models.Model):
 
     def __str__(self):
         return f"{self.submission} - {self.choice.choice_text[:50]}"
+
+
+class Instructor(models.Model):
+    """Model representing an instructor who creates and manages courses"""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='instructor_profile',
+        help_text="Link to user account"
+    )
+    bio = models.TextField(blank=True, help_text="Instructor biography")
+    expertise = models.CharField(max_length=200, blank=True, help_text="Area of expertise")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['user__username']
+        verbose_name = 'Instructor'
+        verbose_name_plural = 'Instructors'
+
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username}"
+
+
+class Learner(models.Model):
+    """Model representing a learner/student who takes courses"""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='learner_profile',
+        help_text="Link to user account"
+    )
+    bio = models.TextField(blank=True, help_text="Student biography")
+    interests = models.CharField(max_length=200, blank=True, help_text="Areas of interest")
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['user__username']
+        verbose_name = 'Learner'
+        verbose_name_plural = 'Learners'
+
+    def __str__(self):
+        return f"{self.user.get_full_name() or self.user.username}"

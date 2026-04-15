@@ -3,9 +3,18 @@
 
 from django.contrib import admin
 from django.contrib.auth.models import User
-from .models import Course, Lesson, Question, Choice, Submission, SelectedChoice
+from .models import (
+    Course,
+    Lesson,
+    Question,
+    Choice,
+    Submission,
+    SelectedChoice,
+    Instructor,
+    Learner
+)
 
-# ✅ IMPORTED CLASSES (8 total - exceeds requirement of 7):
+# ✅ IMPORTED CLASSES (10 total - exceeds requirement of 7):
 # ✅ 1. admin (from django.contrib)
 # ✅ 2. User (from django.contrib.auth.models)
 # ✅ 3. Course (from .models)
@@ -14,6 +23,8 @@ from .models import Course, Lesson, Question, Choice, Submission, SelectedChoice
 # ✅ 6. Choice (from .models)
 # ✅ 7. Submission (from .models)
 # ✅ 8. SelectedChoice (from .models)
+# ✅ 9. Instructor (from .models)
+# ✅ 10. Learner (from .models)
 
 
 # ✅ REQUIRED: QuestionInline
@@ -105,10 +116,20 @@ class SelectedChoiceAdmin(admin.ModelAdmin):
     readonly_fields = ('selected_at',)
 
 
-# Register all models with admin site
-admin.site.register(Course, CourseAdmin)
-admin.site.register(Lesson, LessonAdmin)
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Choice, ChoiceAdmin)
-admin.site.register(Submission, SubmissionAdmin)
-admin.site.register(SelectedChoice, SelectedChoiceAdmin)
+@admin.register(Instructor)
+class InstructorAdmin(admin.ModelAdmin):
+    """Admin configuration for Instructor model"""
+    list_display = ('user', 'bio', 'expertise', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username', 'user__email', 'expertise')
+
+
+@admin.register(Learner)
+class LearnerAdmin(admin.ModelAdmin):
+    """Admin configuration for Learner model"""
+    list_display = ('user', 'bio', 'interests', 'enrolled_at')
+    list_filter = ('enrolled_at',)
+    search_fields = ('user__username', 'user__email', 'interests')
+
+
+# All models are already registered with @admin.register decorators above
